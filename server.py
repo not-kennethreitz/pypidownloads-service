@@ -1,7 +1,14 @@
 import graphene
+
 from flask import Flask, jsonify
 from flask_common import Common
+from flask_graphql import GraphQLView
 
+
+app = Flask(__name__)
+app.debug = True
+
+common = Common(app)
 
 
 class Query(graphene.ObjectType):
@@ -10,18 +17,14 @@ class Query(graphene.ObjectType):
     def resolve_hello(self, args, context, info):
         return 'Hello ' + args['name']
 
+
 schema = graphene.Schema(query=Query)
 
-app = Flask(__name__)
-app.debug = True
+app.add_url_rule('/', view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True))
 
-common = Common(app)
+# Optional, for adding batch query support (used in Apollo-Client)
+app.add_url_rule('/batch', view_func=GraphQLView.as_view('graphql_batch', schema=schema, batch=True))
 
-@app.route('/<hello>')
-@common.cache.cached(timeout=50)
-def hello(hello='world'):
-    result = schema.execute('{ hello }')
-    return jsonify(result.data)
 
 if __name__ == '__main__':
     common.serve()
