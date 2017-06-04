@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2e19c03ec7b62096ee6f0e872c017c53236c68b4465d23afbaee9621f87214f0"
+            "sha256": "78a2bbbd3fa0c4623698c7b3dde53388e5fef7eef3a117019466883eac01dcef"
         },
         "requires": {},
         "sources": [
@@ -12,6 +12,9 @@
         ]
     },
     "default": {
+        "cachetools": {
+            "version": "==2.0.0"
+        },
         "click": {
             "version": "==6.7"
         },
@@ -33,6 +36,24 @@
         "flask-common": {
             "version": "==0.2.0"
         },
+        "flask-graphql": {
+            "version": "==1.4.1"
+        },
+        "google-auth": {
+            "version": "==1.0.1"
+        },
+        "google-auth-httplib2": {
+            "version": "==0.0.2"
+        },
+        "google-cloud-bigquery": {
+            "version": "==0.24.0"
+        },
+        "google-cloud-core": {
+            "version": "==0.24.1"
+        },
+        "googleapis-common-protos": {
+            "version": "==1.5.2"
+        },
         "graphene": {
             "version": "==1.4"
         },
@@ -47,6 +68,9 @@
         },
         "gunicorn": {
             "version": "==19.7.1"
+        },
+        "httplib2": {
+            "version": "==0.10.3"
         },
         "humanize": {
             "version": "==0.5.1"
@@ -72,6 +96,15 @@
         "promise": {
             "version": "==2.0.2"
         },
+        "protobuf": {
+            "version": "==3.3.0"
+        },
+        "pyasn1": {
+            "version": "==0.2.3"
+        },
+        "pyasn1-modules": {
+            "version": "==0.0.9"
+        },
         "python-dateutil": {
             "version": "==2.6.0"
         },
@@ -84,8 +117,14 @@
         "regex": {
             "version": "==2017.05.26"
         },
+        "rsa": {
+            "version": "==3.4.2"
+        },
         "ruamel.yaml": {
             "version": "==0.15.0"
+        },
+        "setuptools": {
+            "version": "==36.0.1"
         },
         "six": {
             "version": "==1.10.0"
