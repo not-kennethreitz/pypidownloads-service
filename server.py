@@ -56,12 +56,16 @@ app = Flask(__name__)
 
 common = Common(app)
 
+class Spread(graphene.ObjectType):
+    version = graphene.String()
+    downloads = graphene.String()
 
 class Package(graphene.ObjectType):
     name = graphene.String()
     downloads = graphene.String()
     recent_downloads = graphene.String()
     recent_python3_adoption = graphene.String()
+    recent_python_version_spread = graphene.List(Spread)
 
     @graphene.resolve_only_args
     def resolve_downloads(self):
@@ -114,6 +118,35 @@ class Package(graphene.ObjectType):
               download_count DESC
             LIMIT 100
         """, project=self.name))[0][1]
+
+    @graphene.resolve_only_args
+    def resolve_recent_python_version_spread(self):
+        spread = list()
+
+        for version, value in query("""
+            SELECT
+              REGEXP_EXTRACT(details.python, r"^([^\.]+\.[^\.]+)") as python_version,
+              COUNT(*) as download_count,
+            FROM
+              TABLE_DATE_RANGE(
+                [the-psf:pypi.downloads],
+                DATE_ADD(CURRENT_TIMESTAMP(), -31, "day"),
+                DATE_ADD(CURRENT_TIMESTAMP(), -1, "day")
+              )
+            WHERE
+              file.project = '{project}'
+            GROUP BY
+              python_version,
+            ORDER BY
+              download_count DESC
+            LIMIT 100
+        """, project=self.name):
+            s = Spread()
+            s.version = version
+            s.downloads = value
+            spread.append(s)
+
+        return spread
 
 class Query(graphene.ObjectType):
     # hello = graphene.String(name=graphene.Argument(graphene.String, default_value="stranger"))
