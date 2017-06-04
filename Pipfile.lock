@@ -1,0 +1,107 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "2e19c03ec7b62096ee6f0e872c017c53236c68b4465d23afbaee9621f87214f0"
+        },
+        "requires": {},
+        "sources": [
+            {
+                "url": "https://pypi.python.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "click": {
+            "version": "==6.7"
+        },
+        "colorama": {
+            "version": "==0.3.9"
+        },
+        "crayons": {
+            "version": "==0.1.2"
+        },
+        "dateparser": {
+            "version": "==0.6.0"
+        },
+        "flask": {
+            "version": "==0.12.2"
+        },
+        "flask-cache": {
+            "version": "==0.13.1"
+        },
+        "flask-common": {
+            "version": "==0.2.0"
+        },
+        "graphene": {
+            "version": "==1.4"
+        },
+        "graphql-core": {
+            "version": "==1.1"
+        },
+        "graphql-relay": {
+            "version": "==0.4.5"
+        },
+        "greenlet": {
+            "version": "==0.4.12"
+        },
+        "gunicorn": {
+            "version": "==19.7.1"
+        },
+        "humanize": {
+            "version": "==0.5.1"
+        },
+        "itsdangerous": {
+            "version": "==0.24"
+        },
+        "jinja2": {
+            "version": "==2.9.6"
+        },
+        "markupsafe": {
+            "version": "==1.0"
+        },
+        "maya": {
+            "version": "==0.3.2"
+        },
+        "meinheld": {
+            "version": "==0.6.1"
+        },
+        "pendulum": {
+            "version": "==1.2.1"
+        },
+        "promise": {
+            "version": "==2.0.2"
+        },
+        "python-dateutil": {
+            "version": "==2.6.0"
+        },
+        "pytz": {
+            "version": "==2017.2"
+        },
+        "pytzdata": {
+            "version": "==2017.2"
+        },
+        "regex": {
+            "version": "==2017.05.26"
+        },
+        "ruamel.yaml": {
+            "version": "==0.15.0"
+        },
+        "six": {
+            "version": "==1.10.0"
+        },
+        "typing": {
+            "version": "==3.6.1"
+        },
+        "tzlocal": {
+            "version": "==1.4"
+        },
+        "werkzeug": {
+            "version": "==0.12.2"
+        },
+        "whitenoise": {
+            "version": "==3.3.0"
+        }
+    },
+    "develop": {}
+}
