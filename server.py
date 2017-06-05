@@ -58,13 +58,13 @@ common = Common(app)
 
 class Spread(graphene.ObjectType):
     version = graphene.String()
-    downloads = graphene.String()
+    downloads = graphene.Int()
 
 class Package(graphene.ObjectType):
     name = graphene.String()
-    downloads = graphene.String()
-    recent_downloads = graphene.String()
-    recent_python3_adoption = graphene.String()
+    downloads = graphene.Int()
+    recent_downloads = graphene.Int()
+    recent_python3_adoption = graphene.Float()
     recent_python_version_spread = graphene.List(Spread)
 
     @graphene.resolve_only_args
@@ -151,6 +151,8 @@ class Package(graphene.ObjectType):
 class Query(graphene.ObjectType):
     # hello = graphene.String(name=graphene.Argument(graphene.String, default_value="stranger"))
     package = graphene.Field(Package, name=graphene.String())
+    # recent_top_packages = graphene.String(name=graphene.Argument(graphene.String, default_value="default"))
+    recent_top_packages = graphene.List(Package)
 
     @graphene.resolve_only_args
     def resolve_package(self, name):
@@ -158,8 +160,36 @@ class Query(graphene.ObjectType):
         p.name = name
         return p
 
+    @graphene.resolve_only_args
+    def resolve_recent_top_packages(self):
+        def gen():
+
+            for project, downloads in query("""
+                SELECT
+                  file.project,
+                  COUNT(*) as total_downloads,
+                FROM
+                  TABLE_DATE_RANGE(
+                    [the-psf:pypi.downloads],
+                    DATE_ADD(CURRENT_TIMESTAMP(), -31, "day"),
+                    DATE_ADD(CURRENT_TIMESTAMP(), -1, "day")
+                  )
+                GROUP BY
+                  file.project
+                ORDER BY
+                  total_downloads DESC
+                LIMIT 100
+            """):
+                p = Package()
+                p.name = project
+                p.recent_downloads = downloads
+                yield p
+
+        return list(gen())
+
 
 schema = graphene.Schema(query=Query)
+
 
 app.add_url_rule('/', view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True))
 
