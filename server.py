@@ -12,7 +12,6 @@ GOOGLE_PROJECT = os.environ['GOOGLE_PROJECT']
 client = bigquery.Client(project=GOOGLE_PROJECT)
 
 
-
 def query(q, **kwargs):
     q = q.format(**kwargs)
     query_results = client.run_sync_query(q)
@@ -23,20 +22,7 @@ def query(q, **kwargs):
     for row in rows:
         yield row
 
-def print_results(query_results):
-    """Print the query results by requesting a page at a time."""
-    page_token = None
 
-    while True:
-        rows, total_rows, page_token = query_results.fetch_data(
-            max_results=10,
-            page_token=page_token)
-
-        for row in rows:
-            print(row)
-
-        if not page_token:
-            break
 
 app = Flask(__name__)
 app.debug = 'DEBUG' in os.environ
