@@ -61,7 +61,7 @@ class Spread(graphene.ObjectType):
     downloads = graphene.Int()
 
 class Package(graphene.ObjectType):
-    name = graphene.String()
+    name = graphene.String(required=True)
     downloads = graphene.Int()
     recent_downloads = graphene.Int()
     recent_python3_adoption = graphene.Float()
