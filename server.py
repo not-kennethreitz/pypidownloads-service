@@ -29,13 +29,24 @@ app.debug = 'DEBUG' in os.environ
 
 common = Common(app)
 
+
 class VersionSpread(graphene.ObjectType):
     version = graphene.String()
     downloads = graphene.Int()
+    percent = graphene.Float()
+
+    @graphene.resolve_only_args
+    def resolve_percent(self):
+        return self.downloads / self.total
 
 class RegionSpread(graphene.ObjectType):
     region = graphene.String()
     downloads = graphene.Int()
+    percent = graphene.Float()
+
+    @graphene.resolve_only_args
+    def resolve_percent(self):
+        return self.downloads / self.total
 
 class Package(graphene.ObjectType):
     name = graphene.String(required=True)
@@ -124,6 +135,16 @@ class Package(graphene.ObjectType):
             s.downloads = value
             spread.append(s)
 
+
+        # Add .total to every RegionSpread.
+        total = sum([s.downloads for s in spread])
+
+        for i, s in enumerate(list(spread)):
+            s.total = total
+            spread[i] = s
+
+        return spread
+
         return spread
 
     @graphene.resolve_only_args
@@ -151,14 +172,20 @@ class Package(graphene.ObjectType):
             s = VersionSpread()
             s.region = region
             s.downloads = value
+            s.total = None
             spread.append(s)
+
+        # Add .total to every RegionSpread.
+        total = sum([s.downloads for s in spread])
+
+        for i, s in enumerate(list(spread)):
+            s.total = total
+            spread[i] = s
 
         return spread
 
 class Query(graphene.ObjectType):
-    # hello = graphene.String(name=graphene.Argument(graphene.String, default_value="stranger"))
     package = graphene.Field(Package, name=graphene.String())
-    # recent_top_packages = graphene.String(name=graphene.Argument(graphene.String, default_value="default"))
     recent_top_packages = graphene.List(Package)
 
     @graphene.resolve_only_args
