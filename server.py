@@ -91,7 +91,7 @@ class Package(graphene.ObjectType):
         return list(query("""
             SELECT
               file.project,
-              ROUND(SUM(CASE WHEN REGEXP_EXTRACT(details.python, r"^([^\.]+)") = "3" THEN 1 ELSE 0 END) / COUNT(*), 3) AS percent_3,
+              ROUND(SUM(CASE WHEN REGEXP_EXTRACT(details.python, r"^([^\.]+)") = "3" THEN 1 ELSE 0 END) / COUNT(*), 16) AS percent_3,
               COUNT(*) as download_count,
             FROM
               TABLE_DATE_RANGE(
