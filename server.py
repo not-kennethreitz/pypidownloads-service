@@ -9,11 +9,6 @@ from google.cloud import bigquery
 
 
 GOOGLE_PROJECT = os.environ['GOOGLE_PROJECT']
-# GOOGLE_USER = os.environ['GOOGLE_USER']
-# GOOGLE_PASS = os.environ['GOOGLE_PASS']
-
-
-# bq = client = bigquery.Client(project=GOOGLE_PROJECT, credentials=(GOOGLE_USER, GOOGLE_PASS))
 client = bigquery.Client(project=GOOGLE_PROJECT)
 
 
@@ -27,10 +22,6 @@ def query(q, **kwargs):
 
     for row in rows:
         yield row
-
-# Use standard SQL syntax for queries.
-# See: https://cloud.google.com/bigquery/sql-reference/
-# query_results.use_legacy_sql = True
 
 def print_results(query_results):
     """Print the query results by requesting a page at a time."""
@@ -47,12 +38,8 @@ def print_results(query_results):
         if not page_token:
             break
 
-# query_results.run()
-# print_results(query_results)
-# exit()
-
 app = Flask(__name__)
-# app.debug = True
+app.debug = 'DEBUG' in os.environ
 
 common = Common(app)
 
