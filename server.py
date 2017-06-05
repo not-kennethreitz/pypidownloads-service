@@ -29,8 +29,12 @@ app.debug = 'DEBUG' in os.environ
 
 common = Common(app)
 
-class Spread(graphene.ObjectType):
+class VersionSpread(graphene.ObjectType):
     version = graphene.String()
+    downloads = graphene.Int()
+
+class RegionSpread(graphene.ObjectType):
+    region = graphene.String()
     downloads = graphene.Int()
 
 class Package(graphene.ObjectType):
@@ -38,7 +42,8 @@ class Package(graphene.ObjectType):
     downloads = graphene.Int()
     recent_downloads = graphene.Int()
     recent_python3_adoption = graphene.Float()
-    recent_python_version_spread = graphene.List(Spread)
+    recent_python_version_spread = graphene.List(VersionSpread)
+    recent_region_spread = graphene.List(RegionSpread)
 
     @graphene.resolve_only_args
     def resolve_downloads(self):
@@ -114,8 +119,37 @@ class Package(graphene.ObjectType):
               download_count DESC
             LIMIT 100
         """, project=self.name):
-            s = Spread()
+            s = VersionSpread()
             s.version = version
+            s.downloads = value
+            spread.append(s)
+
+        return spread
+
+    @graphene.resolve_only_args
+    def resolve_recent_region_spread(self):
+        spread = list()
+
+        for region, value in query("""
+            SELECT
+              country_code,
+              COUNT(*) as downloads,
+            FROM
+              TABLE_DATE_RANGE(
+                [the-psf:pypi.downloads],
+                DATE_ADD(CURRENT_TIMESTAMP(), -31, "day"),
+                DATE_ADD(CURRENT_TIMESTAMP(), -1, "day")
+              )
+            WHERE
+              file.project = '{project}'
+            GROUP BY
+              country_code
+            ORDER BY
+              downloads DESC
+            LIMIT 100
+        """, project=self.name):
+            s = VersionSpread()
+            s.region = region
             s.downloads = value
             spread.append(s)
 
