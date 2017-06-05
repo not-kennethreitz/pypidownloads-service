@@ -178,7 +178,7 @@ class Query(graphene.ObjectType):
                   file.project
                 ORDER BY
                   total_downloads DESC
-                LIMIT 100
+                LIMIT 250
             """):
                 p = Package()
                 p.name = project
