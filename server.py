@@ -5,7 +5,9 @@ import graphene
 from flask import Flask, jsonify
 from flask_common import Common
 from flask_graphql import GraphQLView
+from flask_basicauth import BasicAuth
 from google.cloud import bigquery
+
 
 
 GOOGLE_PROJECT = os.environ['GOOGLE_PROJECT']
@@ -22,12 +24,15 @@ def query(q, **kwargs):
     for row in rows:
         yield row
 
-
-
 app = Flask(__name__)
 app.debug = 'DEBUG' in os.environ
 
-common = Common(app)
+app.config['BASIC_AUTH_USERNAME'] = 'kennethreitz'
+app.config['BASIC_AUTH_PASSWORD'] = 'kennethreitz'
+app.config['BASIC_AUTH_FORCE'] = True
+
+basic_auth = BasicAuth(app)
+# common = Common(app)
 
 
 class VersionSpread(graphene.ObjectType):
@@ -232,4 +237,5 @@ app.add_url_rule('/batch', view_func=GraphQLView.as_view('graphql_batch', schema
 
 
 if __name__ == '__main__':
-    common.serve()
+    # common.serve()
+    app.run()
