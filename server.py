@@ -54,10 +54,26 @@ class RegionSpread(graphene.ObjectType):
 
 class Package(graphene.ObjectType):
     name = graphene.String(required=True)
+    downloads = graphene.Int()
     recent_downloads = graphene.Int()
     recent_python3_adoption = graphene.Float()
     recent_python_version_spread = graphene.List(VersionSpread)
     recent_region_spread = graphene.List(RegionSpread)
+
+    @graphene.resolve_only_args
+    def resolve_downloads(self):
+        return list(query("""
+            SELECT
+              COUNT(*) as total_downloads,
+            FROM
+              TABLE_DATE_RANGE(
+                [the-psf:pypi.downloads],
+                DATE_ADD(CURRENT_TIMESTAMP(), -2400, "day"),
+                DATE_ADD(CURRENT_TIMESTAMP(), -1, "day")
+              )
+            WHERE
+              file.project = '{project}'
+        """, project=self.name))[0][0]
 
     @graphene.resolve_only_args
     def resolve_recent_downloads(self):
